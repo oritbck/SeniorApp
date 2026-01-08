@@ -3,17 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout Pro</title>
+    <title>אימון אישי</title>
     <style>
-        :root {
-            --primary: #4f46e5;
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text: #1e293b;
-            --accent: #3b82f6;
-        }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; }
-        .app-container { max-width: 500px; margin: 0 auto; padding-bottom: 50px; }
+        :root { --primary: #4f46e5; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        
         header {
             background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             color: white; padding: 20px; text-align: center;
@@ -21,88 +15,100 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
         }
+
         .timer-display { font-size: 3rem; font-weight: 800; font-family: monospace; margin-bottom: 10px; color: #fbbf24; }
         .controls button { border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; margin: 0 5px; }
-        .aerobic-card { background: var(--card); margin: 20px; padding: 20px; border-radius: 20px; border-right: 6px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .aerobic-header { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--accent); margin-bottom: 15px; }
-        .aerobic-stats { display: flex; justify-content: space-around; background: #eff6ff; padding: 15px; border-radius: 12px; }
+
+        .content { padding: 15px; }
+
+        .aerobic-card {
+            background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px;
+            border-right: 6px solid #3b82f6; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .aerobic-grid { display: flex; justify-content: space-around; background: #eff6ff; padding: 15px; border-radius: 12px; margin: 10px 0; }
         .stat-item { text-align: center; }
-        .exercise-card { background: var(--card); margin: 20px; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .exercise-card img { width: 100%; height: auto; display: block; background: #fff; }
-        .card-content { padding: 20px; }
-        .card-content h3 { margin: 0 0 10px 0; font-size: 1.3rem; }
-        .card-content p { font-size: 0.95rem; color: #475569; line-height: 1.5; }
-        .done-toggle { display: flex; align-items: center; justify-content: center; gap: 10px; background: #f1f5f9; padding: 15px; cursor: pointer; font-weight: bold; }
-        .done-toggle input { width: 22px; height: 22px; accent-color: #10b981; }
-        .completed { opacity: 0.6; filter: grayscale(0.5); }
+        .stat-item span { display: block; font-size: 0.8rem; color: #64748b; }
+
+        .exercise-card { background: white; border-radius: 20px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .exercise-card img { width: 100%; height: auto; display: block; background: #fff; border-bottom: 1px solid #eee; }
+        .card-body { padding: 20px; }
+        .card-body h3 { margin: 0 0 10px 0; color: var(--primary); }
+        .card-body p { font-size: 0.95rem; line-height: 1.5; color: #475569; }
+
+        .done-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: #f1f5f9; padding: 15px; cursor: pointer; font-weight: bold; border-top: 1px solid #eee;
+        }
+        .done-btn input { width: 20px; height: 20px; accent-color: #10b981; }
+        .completed { opacity: 0.5; filter: grayscale(1); }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <header>
-        <div class="timer-display" id="timer-display">00:00</div>
-        <div class="controls">
-            <button style="background:#10b981; color:white;" onclick="startTimer()">התחל</button>
-            <button style="background:#ef4444; color:white;" onclick="stopTimer()">עצור</button>
-            <button style="background:rgba(255,255,255,0.2); color:white;" onclick="resetTimer()">איפוס</button>
-        </div>
-    </header>
+<header>
+    <div class="timer-display" id="display">00:00</div>
+    <div class="controls">
+        <button style="background:#10b981; color:white;" onclick="start()">התחל</button>
+        <button style="background:#ef4444; color:white;" onclick="stop()">עצור</button>
+        <button style="background:rgba(255,255,255,0.2); color:white;" onclick="reset()">איפוס</button>
+    </div>
+</header>
 
+<div class="content">
     <div class="aerobic-card">
-        <div class="aerobic-header">🏃 פעילות אירובית</div>
-        <div class="aerobic-stats">
-            [span_1](start_span)<div class="stat-item"><span>הליכה</span><strong>3 דקות</strong></div>[span_1](end_span)
-            [span_2](start_span)<div class="stat-item"><span>אופני ידיים</span><strong>2 דקות</strong></div>[span_2](end_span)
+        [span_0](start_span)<h3 style="margin:0; color:#3b82f6;">🏃 פעילות אירובית[span_0](end_span)</h3>
+        <div class="aerobic-grid">
+            [span_1](start_span)<div class="stat-item"><span>הליכה</span><strong>3 דקות[span_1](end_span)</strong></div>
+            [span_2](start_span)<div class="stat-item"><span>אופני ידיים</span><strong>2 דקות[span_2](end_span)</strong></div>
         </div>
-        <p style="font-size: 0.85rem; color: #ef4444; margin-top: 15px; text-align: center;">
-            [span_3](start_span)💡 להוסיף 1 דקה כל יומיים[span_3](end_span)
-        </p>
+        [span_3](start_span)<p style="font-size: 0.85rem; color: #ef4444; text-align: center; margin: 0;">💡 להוסיף 1 דקה כל יומיים[span_3](end_span)</p>
     </div>
 
-    <div class="exercise-card" id="ex1">
+    <div class="exercise-card" id="c1">
         <img src="pushups.gif" alt="שכיבות סמיכה">
-        <div class="card-content">
-            <h3>שכיבות סמיכה על קיר</h3>
-            <p>עמדו מול קיר במרחק פסיעה. הניחו ידיים על הקיר ברוחב הכתפיים. [span_4](start_span)כופפו מרפקים והתקרבו לקיר עם גוף ישר, ואז דחפו חזרה.[span_4](end_span)</p>
+        <div class="card-body">
+            [span_4](start_span)<h3>שכיבות סמיכה על קיר[span_4](end_span)</h3>
+            <p>עמדו מול קיר במרחק פסיעה. הניחו ידיים על הקיר ברוחב הכתפיים. [span_5](start_span)כופפו מרפקים והתקרבו לקיר עם גוף ישר, ואז דחפו חזרה.[span_5](end_span)</p>
         </div>
-        <label class="done-toggle"><input type="checkbox" onchange="toggleCard('ex1')"> <span>סיימתי</span></label>
+        <label class="done-btn"><input type="checkbox" onchange="toggle('c1')"> בוצע</label>
     </div>
 
-    <div class="exercise-card" id="ex2">
+    <div class="exercise-card" id="c2">
         <img src="leg.gif" alt="פשיטת ברך">
-        <div class="card-content">
-            <h3>פשיטת ברך בישיבה</h3>
-            <p>שבו זקוף על כיסא יציב. הרימו רגל אחת קדימה עד שהיא ישרה לגמרי, החזיקו שנייה והורידו לאט. [span_5](start_span)בצעו את כל החזרות ואז עברו לרגל השנייה.[span_5](end_span)</p>
+        <div class="card-body">
+            [span_6](start_span)<h3>פשיטת ברך בישיבה[span_6](end_span)</h3>
+            <p>שבו זקוף על כיסא יציב. הרימו רגל אחת קדימה עד שהיא ישרה לגמרי, החזיקו שנייה והורידו לאט. [span_7](start_span)בצעו את כל החזרות ואז עברו לרגל השנייה.[span_7](end_span)</p>
         </div>
-        <label class="done-toggle"><input type="checkbox" onchange="toggleCard('ex2')"> <span>סיימתי</span></label>
+        <label class="done-btn"><input type="checkbox" onchange="toggle('c2')"> בוצע</label>
     </div>
 
-    <div class="exercise-card" id="ex3">
+    <div class="exercise-card" id="c3">
         <img src="calfs.gif" alt="הרמת עקבים">
-        <div class="card-content">
-            <h3>הרמת עקבים (שריר התאומים)</h3>
-            <p>עמדו זקוף (ניתן להיעזר בגב של כיסא לשיווי משקל). [span_6](start_span)עלו על קצות האצבעות הכי גבוה שניתן, החזיקו רגע ורדו לאט חזרה לרצפה.[span_6](end_span)</p>
+        <div class="card-body">
+            [span_8](start_span)<h3>הרמת עקבים[span_8](end_span)</h3>
+            <p>עמדו זקוף (ניתן להיעזר בגב של כיסא). [span_9](start_span)עלו על קצות האצבעות הכי גבוה שניתן, החזיקו רגע ורדו לאט חזרה לרצפה.[span_9](end_span)</p>
         </div>
-        <label class="done-toggle"><input type="checkbox" onchange="toggleCard('ex3')"> <span>סיימתי</span></label>
+        <label class="done-btn"><input type="checkbox" onchange="toggle('c3')"> בוצע</label>
     </div>
 
-    <div class="exercise-card" id="ex4">
+    <div class="exercise-card" id="c4">
         <img src="rowing.png" alt="חתירה">
-        <div class="card-content">
-            <h3>חתירה עם גומיה</h3>
-            [span_7](start_span)<p>שב זקוף, מבט קדימה, גומיה כנגד ידית/שולחן ומשיכה לכיוון הבטן.[span_7](end_span)</p>
+        <div class="card-body">
+            [span_10](start_span)<h3>חתירה עם גומיה[span_10](end_span)</h3>
+            [span_11](start_span)<p>שבו זקוף, מבט קדימה, גומיה כנגד ידית/שולחן ומשיכה לכיוון הבטן.[span_11](end_span)</p>
         </div>
-        <label class="done-toggle"><input type="checkbox" onchange="toggleCard('ex4')"> <span>סיימתי</span></label>
+        <label class="done-btn"><input type="checkbox" onchange="toggle('c4')"> בוצע</label>
     </div>
 </div>
 
 <script>
-    let timer; let seconds = 0;
-    function startTimer() { if (timer) return; timer = setInterval(() => { seconds++; let m = Math.floor(seconds/60).toString().padStart(2,'0'); let s = (seconds%60).toString().padStart(2,'0'); document.getElementById('timer-display').innerText = `${m}:${s}`; }, 1000); }
-    function stopTimer() { clearInterval(timer); timer = null; }
-    function resetTimer() { stopTimer(); seconds = 0; document.getElementById('timer-display').innerText = '00:00'; }
-    function toggleCard(id) { document.getElementById(id).classList.toggle('completed'); }
+    let timer, s = 0;
+    function start() { if(!timer) timer = setInterval(()=>{ s++; let m=Math.floor(s/60).toString().padStart(2,'0'), r=(s%60).toString().padStart(2,'0'); document.getElementById('display').innerText=`${m}:${r}`; },1000); }
+    function stop() { clearInterval(timer); timer=null; }
+    function reset() { stop(); s=0; document.getElementById('display').innerText="00:00"; }
+    function toggle(id) { document.getElementById(id).classList.toggle('completed'); }
 </script>
+
 </body>
 </html>
