@@ -3,286 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout App - Pro</title>
+    <title>Workout App</title>
     <style>
-        :root {
-            --primary: #4f46e5;
-            --secondary: #10b981;
-            --bg: #f1f5f9;
-            --text: #1e293b;
-            --white: #ffffff;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            background: var(--bg);
-            min-height: 100vh;
-        }
-
-        /* כותרת עם טיימר מובנה - לא צף */
-        header {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 0 0 25px 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .timer-display {
-            font-size: 3.5rem;
-            font-weight: 800;
-            font-family: monospace;
-            margin: 10px 0;
-            color: #fbbf24;
-            letter-spacing: 2px;
-        }
-
-        .timer-controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .timer-controls button {
-            border: none;
-            padding: 8px 18px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: 0.2s;
-        }
-
-        .btn-start { background: var(--secondary); color: white; }
-        .btn-stop { background: #ef4444; color: white; }
-        .btn-reset { background: rgba(255,255,255,0.2); color: white; }
-
+        :root { --primary: #4f46e5; --bg: #f1f5f9; --text: #1e293b; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        .app-container { max-width: 480px; margin: 0 auto; background: var(--bg); min-height: 100vh; }
+        header { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 20px; text-align: center; border-radius: 0 0 25px 25px; }
+        .timer-display { font-size: 3.5rem; font-weight: 800; font-family: monospace; margin: 10px 0; color: #fbbf24; }
+        .timer-controls button { border: none; padding: 8px 18px; border-radius: 10px; font-weight: bold; cursor: pointer; margin: 0 5px; }
         .content { padding: 20px; }
-
-        /* עיצוב משודרג לחלק האירובי */
-        .aerobic-section {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border-top: 5px solid #3b82f6;
-        }
-
-        .aerobic-title {
-            font-weight: 800;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #3b82f6;
-        }
-
-        .aerobic-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .aerobic-item {
-            background: #eff6ff;
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        .aerobic-item span { display: block; font-size: 0.8rem; color: #64748b; }
-        .aerobic-item strong { font-size: 1.1rem; color: #1e3a8a; }
-
-        .aerobic-tip {
-            margin-top: 15px;
-            padding: 10px;
-            background: #fff7ed;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            color: #9a3412;
-            text-align: center;
-            border: 1px dashed #fdba74;
-        }
-
-        /* כרטיסי תרגילים */
-        .section-header {
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin: 20px 0 15px;
-            color: var(--primary);
-        }
-
-        .exercise-card {
-            background: var(--white);
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        }
-
-        .exercise-card img {
-            width: 100%;
-            height: auto;
-            background: #000;
-            display: block;
-        }
-
+        .aerobic-section { background: white; border-radius: 20px; padding: 20px; margin-bottom: 25px; border-top: 5px solid #3b82f6; }
+        .exercise-card { background: white; border-radius: 20px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .exercise-card img { width: 100%; height: auto; display: block; background: white; }
         .card-body { padding: 20px; }
-        .card-body h3 { margin: 0 0 10px; font-size: 1.2rem; color: var(--text); }
-        .instructions { font-size: 0.9rem; color: #64748b; margin-bottom: 20px; line-height: 1.5; }
-        
-        /* כפתור בוצע מעוצב */
-        .done-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: #f1f5f9;
-            padding: 12px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: bold;
-            user-select: none;
-        }
-
-        .done-btn input { width: 20px; height: 20px; accent-color: var(--secondary); }
-        
-        .exercise-card.completed {
-            opacity: 0.6;
-            border: 2px solid var(--secondary);
-        }
+        .done-btn { display: flex; align-items: center; justify-content: center; gap: 10px; background: #f1f5f9; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: bold; }
+        .completed { opacity: 0.5; filter: grayscale(1); }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <header>
-        <div style="font-weight: bold; opacity: 0.9;">זמן אימון כולל</div>
         <div class="timer-display" id="timer-display">00:00</div>
         <div class="timer-controls">
-            <button class="btn-start" onclick="startTimer()">התחל</button>
-            <button class="btn-stop" onclick="stopTimer()">עצור</button>
-            <button class="btn-reset" onclick="resetTimer()">איפוס</button>
+            <button style="background: #10b981; color: white;" onclick="startTimer()">התחל</button>
+            <button style="background: #ef4444; color: white;" onclick="stopTimer()">עצור</button>
+            <button style="background: rgba(255,255,255,0.2); color: white;" onclick="resetTimer()">איפוס</button>
         </div>
     </header>
 
     <div class="content">
         <div class="aerobic-section">
-            <div class="aerobic-title">🏃 פעילות אירובית</div>
-            <div class="aerobic-grid">
-                <div class="aerobic-item">
-                    <span>הליכה</span>
-                    <strong>3 דקות</strong>
-                </div>
-                <div class="aerobic-item">
-                    <span>אופני ידיים</span>
-                    <strong>2 דקות</strong>
-                </div>
-            </div>
-            <div class="aerobic-tip">
-                💡 <strong>טיפ התקדמות:</strong> הוסף 1 דקה לכל פעילות בכל יומיים.
-            </div>
+            <h3 style="margin-top:0; color:#3b82f6;">🏃 אירובי</h3>
+            <p>• <b>3 דקות</b> הליכה | • <b>2 דקות</b> אופני ידיים</p>
+            <small>💡 להוסיף 1 דקה כל יומיים</small>
         </div>
 
-        <div class="section-header">💪 תרגילי כוח</div>
-
         <div class="exercise-card" id="card1">
-            <img src="שכיבות-סמיכה-על-קיר.gif" alt="שכיבות סמיכה">
+            <img src="pushup.gif" alt="Pushups">
             <div class="card-body">
                 <h3>שכיבות סמיכה על קיר</h3>
-                <p class="instructions">עמדו מול קיר במרחק פסיעה. הניחו ידיים על הקיר ברוחב הכתפיים. כופפו מרפקים והתקרבו לקיר עם גוף ישר.</p>
-                <label class="done-btn">
-                    <input type="checkbox" onchange="toggleComplete('card1')">
-                    <span>סיימתי תרגיל זה</span>
-                </label>
+                <label class="done-btn"><input type="checkbox" onchange="document.getElementById('card1').classList.toggle('completed')"> <span>בוצע</span></label>
             </div>
         </div>
 
         <div class="exercise-card" id="card2">
-            <img src="פשיטת-ברך-בישיבה.gif" alt="פשיטת ברך">
+            <img src="leg.gif" alt="Leg Extension">
             <div class="card-body">
                 <h3>פשיטת ברך בישיבה</h3>
-                <p class="instructions">שבו זקוף על כיסא יציב. הרימו רגל אחת קדימה עד שהיא ישרה לגמרי, החזיקו שנייה והורידו לאט.</p>
-                <label class="done-btn">
-                    <input type="checkbox" onchange="toggleComplete('card2')">
-                    <span>סיימתי תרגיל זה</span>
-                </label>
+                <label class="done-btn"><input type="checkbox" onchange="document.getElementById('card2').classList.toggle('completed')"> <span>בוצע</span></label>
             </div>
         </div>
 
         <div class="exercise-card" id="card3">
-            <img src="שריר-התאומים.gif" alt="הרמת עקבים">
+            <img src="calf.gif" alt="Calf Raise">
             <div class="card-body">
                 <h3>הרמת עקבים</h3>
-                <p class="instructions">עמדו זקוף. עלו על קצות האצבעות הכי גבוה שניתן, החזיקו רגע ורדו לאט חזרה לרצפה.</p>
-                <label class="done-btn">
-                    <input type="checkbox" onchange="toggleComplete('card3')">
-                    <span>סיימתי תרגיל זה</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="exercise-card" id="card4">
-            <img src="https://i.imgur.com/uGzX6Lh.png" alt="חתירה">
-            <div class="card-body">
-                <h3>חתירה עם גומיה</h3>
-                <p class="instructions">שב זקוף, מבט קדימה, גומיה כנגד ידית/שולחן ומשיכה לכיוון הבטן.</p>
-                <label class="done-btn">
-                    <input type="checkbox" onchange="toggleComplete('card4')">
-                    <span>סיימתי תרגיל זה</span>
-                </label>
+                <label class="done-btn"><input type="checkbox" onchange="document.getElementById('card3').classList.toggle('completed')"> <span>בוצע</span></label>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    let timer;
-    let seconds = 0;
-
-    function startTimer() {
-        if (timer) return;
-        timer = setInterval(() => {
-            seconds++;
-            let m = Math.floor(seconds / 60).toString().padStart(2, '0');
-            let s = (seconds % 60).toString().padStart(2, '0');
-            document.getElementById('timer-display').innerText = `${m}:${s}`;
-        }, 1000);
-    }
-
-    function stopTimer() {
-        clearInterval(timer);
-        timer = null;
-    }
-
-    function resetTimer() {
-        stopTimer();
-        seconds = 0;
-        document.getElementById('timer-display').innerText = '00:00';
-    }
-
-    function toggleComplete(cardId) {
-        const card = document.getElementById(cardId);
-        card.classList.toggle('completed');
-    }
+    let timer; let seconds = 0;
+    function startTimer() { if (timer) return; timer = setInterval(() => { seconds++; let m = Math.floor(seconds/60).toString().padStart(2,'0'); let s = (seconds%60).toString().padStart(2,'0'); document.getElementById('timer-display').innerText = `${m}:${s}`; }, 1000); }
+    function stopTimer() { clearInterval(timer); timer = null; }
+    function resetTimer() { stopTimer(); seconds = 0; document.getElementById('timer-display').innerText = '00:00'; }
 </script>
-
 </body>
-
 </html>
